@@ -1,0 +1,102 @@
+:root {
+    --display-bg-color: #353935;
+    --key-bg-color: black;
+    --main-bg-color: #F3F4F7;
+}
+
+body {
+    display: flex;
+    justify-content: center; 
+    min-height: 100vh;
+}
+
+#calculator {
+    align-items: center;
+    background-color: var(--main-bg-color);
+    border: solid 2px black;
+    border-radius: 2rem;
+    box-shadow: 10px 10px 15px;
+    display: flex;
+    flex-direction: column;
+    height: 550px;
+    position: relative; 
+    top: 200px;
+    width: 400px;
+}
+
+#display-container {
+    align-items: center;
+    background-color: var(--display-bg-color);
+    border: solid 1px black;
+    border-radius: 2rem;
+    display: flex;
+    height: 100px;
+    justify-content: center;
+    position: relative;
+    top: 30px;
+    width: 300px;
+}
+
+#display {
+    align-items: center;
+    color: var(--main-bg-color);
+    display: flex;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 35px;
+    height: 80px;
+    justify-content: flex-end;
+    width: 250px;
+}
+
+#buttons-graph {
+    display: grid;
+    grid-gap: 8px;
+    grid-template-areas: 
+        "clear clearEntry modulo add"
+        "seven eight nine subtract"
+        "four five six multiply"
+        "one two three divide"
+        "zero dot equal equal";
+    height: 300px;
+    position: relative; 
+    top: 80px;
+    width: 300px
+}
+
+button[id="clear"] { grid-area: clear; }
+button[id="clear-entry"] { grid-area: clearEntry; }
+button[id="modulo"] { grid-area: modulo; } 
+button[id="add"] { grid-area: add; } 
+
+button[id="seven"] { grid-area: seven; } 
+button[id="eight"] { grid-area: eight; }
+button[id="nine"] { grid-area: nine; }
+button[id="subtract"] { grid-area: subtract; }
+
+button[id="four"] { grid-area: four; }
+button[id="five"] { grid-area: five; }
+button[id="six"] { grid-area: six; }
+button[id="multiply"] { grid-area: multiply; }
+
+button[id="one"] { grid-area: one; }
+button[id="two"] { grid-area: two; }
+button[id="three"] { grid-area: three; }
+button[id="divide"] { grid-area: divide; }
+
+button[id="zero"] { grid-area: zero; }
+button[id="dot"] { grid-area: dot; }
+button[id="equal"] { grid-area: equal; }
+
+.button {
+    background-color: var(--key-bg-color);
+    border-radius: 2rem;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 25px;
+    transition: background-color .3s, color .3s;
+}
+
+.button:hover {
+    background-color: var(--main-bg-color);
+    color: var(--key-bg-color);
+}
