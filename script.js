@@ -79,7 +79,6 @@ function assignValues() {
        result = operateValues(operandOne, operandTwo);
        result = checkDecimals(result); 
        display.textContent = result; 
-       resetOperands(); 
     } else {
        operandOne = Number(display.textContent);
        display.textContent = null;
@@ -88,31 +87,36 @@ function assignValues() {
     console.log(operandTwo);
 } 
 
-function evaluateValues() {
-    if (operandOne) {
+function evaluateValues() { // here 
+    if (!operandTwo && operatorOne) {
+        display.textContent = "Error!";
+        console.log("One");
+    } else if (operandOne) {
        operandTwo = Number(display.textContent); 
        result = operateValues(operandOne, operandTwo);
        result = checkDecimals(result); 
        display.textContent = result;
+       console.log("Two");
     } else { 
-       display.textContent = "Math error!";  
+       display.textContent = "Error!";  
     }
 }
 
 function checkDecimals(num) {
-    console.log(num);
     numLength = num 
         .toString()
         .split("."); 
     if (numLength[1] > 3) { 
         return num.toFixed(3); 
+    } else { 
+        return num;
     }
 }
 function appendValue(button) {
     if (newValue) { // ensures that textContent is not appended to calculated value
         display.textContent = button.textContent; 
         newValue = null;
-    } else if (display.textContent == 0) {
+    } else if (display.textContent == 0 || typeof(display.textContent) == "string") {
         display.textContent = button.textContent; 
     } else {
         display.textContent += button.textContent; 
