@@ -128,6 +128,7 @@ function checkDecimals(num) {
         return num;
     }
 }
+
 function appendValue(button) {
     if (display.textContent.includes(".") && button.textContent == ".") { 
         display.textContent = display.textContent;
