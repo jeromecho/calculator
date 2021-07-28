@@ -1,3 +1,5 @@
+const clearButton = document.querySelector('[data-type="clear"]'); 
+const clearEntryButton = document.querySelector('[data-type="clearEntry"]')
 const displayButtons = document.querySelectorAll('[data-type="number"]');
 const operateButtons = document.querySelectorAll('[data-type="operator"]');
 const evaluateButton = document.querySelector('[data-type="evaluate"]');
@@ -5,7 +7,8 @@ const display = document.getElementById("display");
 
 let operator = null; 
 let adding = false; 
-let subtracting = false; 
+let subtracting = false;
+let modulating = false;  
 let multiplying = false; 
 let dividing = false; 
 
@@ -18,16 +21,22 @@ let operatorTwo;
 let operatorTemp;  
 let result; 
 
+clearButton.addEventListener("click", function() {
+    display.textContent = null;
+    completeReset(); 
+}); 
+
+clearEntryButton.addEventListener("click", removeValue);
+
 evaluateButton.addEventListener("click", () => {
     if (!operatorOne) operatorOne = display.textContent; 
     setStatus(operatorOne);
-    // heck
     evaluateValues();
     completeReset(); // here - round answers and debug for mistakes
 });
 
 displayButtons.forEach(button => {
-    button.addEventListener("click", () => appendValue(button));
+    button.addEventListener("click", function() { appendValue(button) });
 });
 
 operateButtons.forEach(button => {
@@ -53,6 +62,8 @@ function completeReset() {
 
 function cleanStatus() {
     if (operatorTwo) operatorOne = operatorTwo; 
+    if (operandTwo) operandOne = display.textContent; 
+    operandTwo = null;
     operatorTwo = null;  
     resetOperations();
 }
@@ -68,8 +79,11 @@ function setStatus(operator) {
             case "x":
                 multiplying = true; 
                 break; 
-            case "÷":
+            case "/":
                 dividing = true; 
+                break; 
+            case "%": 
+                modulating = true; 
         }
 }
 
@@ -77,7 +91,8 @@ function assignValues() {
     if (operandOne) {
        operandTwo = Number(display.textContent); 
        result = operateValues(operandOne, operandTwo);
-       result = checkDecimals(result); 
+       console.log(result);
+       if (!isNaN(result)) result = checkDecimals(result); 
        display.textContent = result; 
     } else {
        operandOne = Number(display.textContent);
@@ -88,18 +103,19 @@ function assignValues() {
 } 
 
 function evaluateValues() { // here 
-    if (!operandTwo && operatorOne) {
-        display.textContent = "Error!";
-        console.log("One");
-    } else if (operandOne) {
-       operandTwo = Number(display.textContent); 
-       result = operateValues(operandOne, operandTwo);
-       result = checkDecimals(result); 
-       display.textContent = result;
-       console.log("Two");
+    outer: 
+    if (operandOne) {
+        if (!display.textContent) {
+            display.textContent = "Error!";
+            break outer; 
+        }
+        operandTwo = Number(display.textContent); 
+        result = operateValues(operandOne, operandTwo); 
+        if (!isNaN(result)) result = checkDecimals(result); 
+        display.textContent = result;
     } else { 
-       display.textContent = "Error!";  
-    }
+        display.textContent = "Error!";
+    } 
 }
 
 function checkDecimals(num) {
@@ -113,21 +129,26 @@ function checkDecimals(num) {
     }
 }
 function appendValue(button) {
-    if (newValue) { // ensures that textContent is not appended to calculated value
+    if (display.textContent.includes(".") && button.textContent == ".") { 
+        display.textContent = display.textContent;
+    } else if (newValue) { // ensures that textContent is not appended to calculated value
         display.textContent = button.textContent; 
         newValue = null;
-    } else if (display.textContent == 0 || typeof(display.textContent) == "string") {
+    } else if (display.textContent == 0 || isNaN(display.textContent) && display.textContent != ".") {
         display.textContent = button.textContent; 
     } else {
         display.textContent += button.textContent; 
     }
 }
 
+function removeValue() { 
+    display.textContent = display.textContent.slice(0, -1);
+}
+
 function operateValues(a, b) {
     if (adding) {
         newValue = operate(add, a, b); 
         return newValue; 
-        console.log("Adding"); // here 
     } else if (subtracting) {
         newValue = operate(subtract, a, b); 
         return newValue; 
@@ -137,10 +158,16 @@ function operateValues(a, b) {
         return newValue;  
         console.log("multiplying"); 
     } else if (dividing) {
-        newValue = operate(divide, a, b);
-        return newValue; 
+        if (b == 0) { 
+            return "No."; 
+        } else { 
+            newValue = operate(divide, a, b);
+            return newValue; 
+        }
+    } else if (modulating) {
+        newValue = operate(modulo, a, b); 
+        return newValue;
     }
-    // resetOperations(); 
 }
 
 function resetOperands() {
@@ -153,6 +180,7 @@ function resetOperations() {
     subtracting = false;
     multiplying = false; 
     dividing = false;  
+    modulating = false; 
 }
 
 function operate(operator, a, b) {
@@ -174,4 +202,8 @@ function multiply(a,b) {
 
 function divide(a, b) {
     return a / b;
+}
+
+function modulo(a, b) {
+    return a % b; 
 }
